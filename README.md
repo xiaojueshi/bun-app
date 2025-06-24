@@ -114,7 +114,6 @@ bun-app/
 ├── dist/                       # 构建输出目录 ✨
 ├── package.json
 ├── tsconfig.json
-├── bunfig.toml                 # Bun 配置文件 ✨
 └── README.md
 ```
 
@@ -221,22 +220,6 @@ scp -r ./public user@server:/path/to/deployment/
 - ✅ **静态资源嵌入**: HTML 和前端资源会被自动嵌入到可执行文件中
 - ✅ **极速启动**: 冷启动时间极短
 - ✅ **内存效率**: 运行时内存占用低
-
-### 配置选项
-
-在 `bunfig.toml` 中可以配置构建选项：
-
-```toml
-[build]
-target = "bun"
-outdir = "./dist"
-sourcemap = "external"
-
-[production]
-minify = true
-treeshaking = true
-dropConsole = false  # 生产环境是否移除 console.log
-```
 
 ## 🎯 快速开始
 
@@ -493,7 +476,3 @@ app.useGlobalPipes(
 ## 📄 许可证
 
 MIT License
-
----
-
-此项目使用 [Bun](https://bun.sh) 构建，一个快速的 JavaScript 运行时。
