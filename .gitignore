@@ -81,3 +81,8 @@ Thumbs.db
 # Temporary folders
 tmp/
 temp/
+
+# IDE
+.cursor/
+.vscode/
+.idea/
