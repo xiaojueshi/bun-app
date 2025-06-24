@@ -1,19 +1,31 @@
-# Bun Web 框架
+# Bun Web 全栈框架
 
-一个基于 Bun 运行时构建的轻量级 Web 框架，采用类似 NestJS 的设计模式，支持装饰器、依赖注入和模块化架构。
+一个基于 Bun 运行时构建的现代化全栈 Web 框架，采用类似 NestJS 的设计模式，支持装饰器、依赖注入、模块化架构和静态文件服务。
 
 ## ✨ 特性
 
-- 🚀 **高性能**: 基于 Bun 运行时，启动速度快，性能优异
-- 🎯 **装饰器支持**: 使用装饰器定义控制器、服务和模块
-- 💉 **依赖注入**: 内置依赖注入容器，支持服务自动解析
-- 🏗️ **模块化架构**: 采用模块化设计，便于组织和维护代码
-- 🔧 **TypeScript**: 完整的 TypeScript 支持和类型安全
-- 🌐 **CORS 支持**: 内置 CORS 支持，便于前后端分离开发
-- 🛡️ **守卫系统**: 内置认证守卫和权限控制系统
-- 🔍 **异常过滤器**: 统一异常处理和错误响应格式化
-- 📝 **数据验证**: 内置数据验证管道和 DTO 支持
-- ✨ **现代化 API 文档**: 基于 Scalar 的美观 API 文档界面，支持在线测试
+### 🚀 核心功能
+
+- **高性能**: 基于 Bun 运行时，启动速度快，性能优异
+- **装饰器支持**: 使用装饰器定义控制器、服务和模块
+- **依赖注入**: 内置依赖注入容器，支持服务自动解析
+- **模块化架构**: 采用模块化设计，便于组织和维护代码
+- **TypeScript**: 完整的 TypeScript 支持和类型安全
+
+### 🌐 全栈开发
+
+- **静态文件服务**: 支持 HTML、CSS、JavaScript、TypeScript 的自动打包和服务
+- **热重载**: 开发模式下的实时热重载，提升开发效率
+- **前端构建**: 自动处理 `<script>` 和 `<link>` 标签，支持 TypeScript/JSX 转译
+- **可执行文件**: 支持打包为单一可执行文件，便于部署
+
+### 🔧 开发工具
+
+- **CORS 支持**: 内置 CORS 支持，便于前后端分离开发
+- **守卫系统**: 内置认证守卫和权限控制系统
+- **异常过滤器**: 统一异常处理和错误响应格式化
+- **数据验证**: 内置数据验证管道和 DTO 支持
+- **现代化 API 文档**: 基于 Scalar 的美观 API 文档界面，支持在线测试
 
 ## 📦 安装依赖
 
@@ -29,6 +41,12 @@ bun install
 bun run dev
 ```
 
+启动后可访问：
+
+- 🏠 主页: http://localhost:3000
+- 📊 仪表板: http://localhost:3000/dashboard
+- 📖 API 文档: http://localhost:3000/docs
+
 ### 生产模式
 
 ```bash
@@ -38,57 +56,186 @@ bun run start
 ### 构建项目
 
 ```bash
+# 构建为 JavaScript 包
 bun run build
+
+# 构建为可执行文件（开发版）
+bun run build:exe
+
+# 构建为可执行文件（生产版，压缩优化）
+bun run build:exe-prod
+```
+
+### 预览可执行文件
+
+```bash
+# 构建并运行可执行文件
+bun run build:exe
+bun run preview
 ```
 
 ## 📁 项目结构
 
 ```
 bun-app/
-├── src/
+├── src/                        # 后端源代码
 │   ├── common/                 # 通用模块
 │   │   ├── decorators/         # 装饰器
-│   │   │   ├── injectable.decorator.ts    # @Injectable 装饰器
-│   │   │   ├── controller.decorator.ts    # @Controller 装饰器
-│   │   │   ├── module.decorator.ts        # @Module 装饰器
-│   │   │   ├── http-methods.decorator.ts  # HTTP 方法装饰器
-│   │   │   ├── guard.decorator.ts         # @UseGuards 装饰器
-│   │   │   ├── exception-filter.decorator.ts # @UseFilters 装饰器
-│   │   │   ├── param.decorator.ts         # 参数装饰器
-│   │   │   └── swagger.decorator.ts       # Swagger 装饰器
 │   │   ├── container/          # 依赖注入容器
-│   │   │   └── container.ts
 │   │   ├── application/        # 应用程序核心
-│   │   │   └── application.ts
 │   │   ├── core/               # 核心工具
-│   │   │   └── application-factory.ts
 │   │   ├── guards/             # 守卫接口
-│   │   │   └── guard.interface.ts
 │   │   ├── filters/            # 异常过滤器
-│   │   │   ├── exception.filter.ts
-│   │   │   └── validation-exception.filter.ts
 │   │   ├── pipes/              # 数据管道
-│   │   │   ├── pipe.interface.ts
-│   │   │   ├── pipe-resolver.ts
-│   │   │   └── validation.pipe.ts
 │   │   ├── swagger/            # API 文档
-│   │   │   ├── swagger-generator.ts
-│   │   │   └── swagger.module.ts
 │   │   └── index.ts            # 通用模块导出
 │   ├── modules/                # 业务模块
 │   │   └── user/               # 用户模块
 │   │       ├── dto/            # 数据传输对象
-│   │       │   └── create-user.dto.ts
 │   │       ├── guards/         # 用户模块守卫
-│   │       │   └── auth.guard.ts
 │   │       ├── user.controller.ts
 │   │       ├── user.service.ts
 │   │       └── user.module.ts
 │   ├── app.module.ts           # 根模块
 │   └── main.ts                 # 应用入口
+├── frontend/                   # 前端文件目录 ✨ 已重新整理
+│   ├── assets/                 # 静态资源
+│   │   ├── favicon.ico         # 网站图标
+│   │   └── logo.svg            # 应用图标
+│   ├── components/             # 前端组件
+│   │   ├── app.ts              # 主页应用逻辑
+│   │   └── dashboard.ts        # 仪表板逻辑
+│   ├── pages/                  # HTML 页面
+│   │   ├── index.html          # 主页
+│   │   └── dashboard.html      # 仪表板页面
+│   ├── styles/                 # 样式文件
+│   │   └── styles.css          # 主样式文件
+│   └── README.md               # 前端目录说明
+├── dist/                       # 构建输出目录 ✨
 ├── package.json
 ├── tsconfig.json
+├── bunfig.toml                 # Bun 配置文件 ✨
 └── README.md
+```
+
+## 🌐 全栈开发
+
+> **✨ 前端文件已重新整理！** 所有前端相关文件现在都统一放在 `frontend/` 目录下，提供更清晰的项目结构和更好的文件组织。
+
+### 新前端目录结构
+
+- `frontend/assets/` - 静态资源（图标、图片等）
+- `frontend/components/` - 前端 TypeScript 组件
+- `frontend/pages/` - HTML 页面文件
+- `frontend/styles/` - CSS 样式文件
+
+### 静态路由配置
+
+框架支持通过导入 HTML 文件来配置静态路由：
+
+```typescript
+// src/main.ts
+import indexHtml from "../frontend/pages/index.html";
+import dashboardHtml from "../frontend/pages/dashboard.html";
+
+const app = ApplicationFactory.create(AppModule, {
+  staticRoutes: [
+    { path: "/", html: indexHtml }, // 主页
+    { path: "/dashboard", html: dashboardHtml }, // 仪表板
+  ],
+  // 静态文件目录
+  staticDir: "frontend/assets",
+  development: {
+    hmr: true, // 启用热重载
+    console: true, // 启用控制台日志
+  },
+});
+```
+
+### 前端资源处理
+
+- **自动打包**: HTML 文件中的 `<script>` 和 `<link>` 标签会被自动处理
+- **TypeScript 支持**: 前端 TypeScript 文件会被自动转译
+- **热重载**: 开发模式下，前端文件修改会触发自动刷新
+- **静态文件**: `static/` 目录下的文件可直接访问
+
+### 示例 HTML 文件
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>我的应用</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="app">
+      <img src="../assets/logo.svg" alt="Logo" />
+      <h1>Hello World</h1>
+    </div>
+    <script type="module" src="../components/app.ts"></script>
+  </body>
+</html>
+```
+
+Bun 会自动：
+
+1. 转译 TypeScript 文件
+2. 打包和压缩资源
+3. 生成内容哈希以支持缓存
+4. 重写文件路径
+
+## 📦 可执行文件打包
+
+### 构建单一可执行文件
+
+框架支持将整个应用打包为单一的可执行文件，便于部署：
+
+```bash
+# 开发版本（包含调试信息）
+bun run build:exe
+
+# 生产版本（压缩优化）
+bun run build:exe-prod
+```
+
+### 部署
+
+```bash
+# 复制可执行文件到服务器
+scp ./dist/bun-app user@server:/path/to/deployment/
+
+# 复制静态资源（如果需要）
+scp -r ./static user@server:/path/to/deployment/
+scp -r ./public user@server:/path/to/deployment/
+
+# 在服务器上运行
+./bun-app
+```
+
+### 特性
+
+- ✅ **单文件部署**: 无需安装 Node.js 或 Bun 运行时
+- ✅ **跨平台**: 支持 Linux、macOS、Windows
+- ✅ **静态资源嵌入**: HTML 和前端资源会被自动嵌入到可执行文件中
+- ✅ **极速启动**: 冷启动时间极短
+- ✅ **内存效率**: 运行时内存占用低
+
+### 配置选项
+
+在 `bunfig.toml` 中可以配置构建选项：
+
+```toml
+[build]
+target = "bun"
+outdir = "./dist"
+sourcemap = "external"
+
+[production]
+minify = true
+treeshaking = true
+dropConsole = false  # 生产环境是否移除 console.log
 ```
 
 ## 🎯 快速开始

@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "bun --hot ./src/main.ts",
     "start": "bun ./src/main.ts",
-    "build": "bun build ./src/main.ts --outdir ./dist",
+    "build": "bun build ./src/main.ts --outdir ./dist --target=bun --production",
+    "build:exe": "bun build ./src/main.ts --compile --outfile ./dist/bun-app",
+    "build:exe-prod": "bun build ./src/main.ts --compile --outfile ./dist/bun-app --minify --production",
+    "preview": "cd dist && ./bun-app",
     "test": "bun test",
     "docs": "echo '📖 API 文档已启动在 http://localhost:3000/docs' && bun dev"
   },

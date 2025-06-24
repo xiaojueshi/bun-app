@@ -5,6 +5,9 @@ import { AuthGuard } from "./modules/user/guards/auth.guard";
 import { ValidationPipe } from "./common/pipes/validation.pipe";
 import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
 
+// 导入 HTML 文件作为静态路由
+import indexHtml from "../frontend/pages/index.html";
+
 /**
  * 应用程序启动函数
  */
@@ -14,6 +17,20 @@ async function bootstrap() {
     port: 3000,
     cors: true,
     globalPrefix: "/api",
+    // 配置静态路由
+    staticRoutes: [
+      {
+        path: "/",
+        html: indexHtml,
+      },
+    ],
+    // 开发模式配置
+    development: {
+      hmr: true, // 启用热模块替换
+      console: true, // 启用控制台日志输出
+    },
+    // 静态文件目录
+    staticDir: "frontend/assets",
     swagger: {
       title: "Bun Web Framework API",
       description: "基于 Bun 运行时的现代化 Web 框架",
@@ -37,7 +54,7 @@ async function bootstrap() {
   );
 
   // 设置全局守卫（可选 - 如果需要对所有路由进行认证）
-  app.useGlobalGuards(AuthGuard);
+  // app.useGlobalGuards(AuthGuard);
 
   // 设置全局异常过滤器
   app.useGlobalFilters(

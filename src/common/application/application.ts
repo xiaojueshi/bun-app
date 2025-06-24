@@ -16,6 +16,16 @@ import { PipeResolver } from "../pipes/pipe-resolver";
 import type { PipeTransform } from "../pipes/pipe.interface";
 
 /**
+ * 静态路由配置接口
+ */
+export interface StaticRoute {
+  /** 路由路径 */
+  path: string;
+  /** HTML 文件路径或者 HTML 导入对象 */
+  html: string | any;
+}
+
+/**
  * 应用程序选项接口
  */
 export interface ApplicationOptions {
@@ -27,6 +37,19 @@ export interface ApplicationOptions {
   globalPrefix?: string;
   /** Swagger 配置 */
   swagger?: SwaggerConfig;
+  /** 静态路由配置 */
+  staticRoutes?: StaticRoute[];
+  /** 开发模式配置 */
+  development?:
+    | boolean
+    | {
+        /** 是否启用热模块替换 */
+        hmr?: boolean;
+        /** 是否启用控制台日志输出 */
+        console?: boolean;
+      };
+  /** 静态文件目录 */
+  staticDir?: string;
 }
 
 /**
@@ -59,6 +82,9 @@ export class Application {
       port: 3000,
       cors: true,
       globalPrefix: "",
+      staticRoutes: [],
+      development: false,
+      staticDir: "static",
       ...options,
     };
 
@@ -355,10 +381,18 @@ export class Application {
    */
   async listen(): Promise<void> {
     console.log(`🚀 应用程序启动在端口 ${this.options.port}`);
-    console.log("📋 注册的路由:");
+    console.log("📋 注册的 API 路由:");
     this.routes.forEach((route) => {
       console.log(`  ${route.method.padEnd(6)} ${route.path}`);
     });
+
+    // 打印静态路由信息
+    if (this.options.staticRoutes && this.options.staticRoutes.length > 0) {
+      console.log("🌐 静态路由:");
+      this.options.staticRoutes.forEach((route) => {
+        console.log(`  GET    ${route.path}`);
+      });
+    }
 
     const corsHeaders: Record<string, string> = this.options.cors
       ? {
@@ -369,8 +403,21 @@ export class Application {
         }
       : {};
 
+    // 构建静态路由映射
+    const staticRoutesMap: Record<string, any> = {};
+    if (this.options.staticRoutes) {
+      this.options.staticRoutes.forEach((route) => {
+        staticRoutesMap[route.path] = route.html;
+      });
+    }
+
     const server = (globalThis as any).Bun.serve({
       port: this.options.port,
+      // 支持静态路由
+      routes: staticRoutesMap,
+      // 开发模式配置
+      development: this.options.development,
+
       fetch: async (req: any) => {
         const url = new URL(req.url);
         const method = req.method;
@@ -425,7 +472,15 @@ export class Application {
           }
         }
 
-        // 查找匹配的路由
+        // 处理静态文件
+        if (
+          this.options.staticDir &&
+          url.pathname.startsWith(`/${this.options.staticDir}/`)
+        ) {
+          return this.handleStaticFile(url.pathname);
+        }
+
+        // 查找匹配的 API 路由
         const matchedRoute = this.findMatchingRoute(url.pathname, method);
         if (matchedRoute) {
           // 将路由参数附加到请求对象
@@ -443,20 +498,67 @@ export class Application {
         }
 
         // 404 响应
-        return new Response("Not Found", {
+        return new Response("🔍 页面未找到", {
           status: 404,
-          headers: corsHeaders,
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            ...corsHeaders,
+          },
         });
       },
     });
 
     console.log(`🌐 服务器运行在 http://localhost:${server.port}`);
 
+    // 显示静态路由访问信息
+    if (this.options.staticRoutes && this.options.staticRoutes.length > 0) {
+      console.log(`📄 静态页面:`);
+      this.options.staticRoutes.forEach((route) => {
+        console.log(`   🔗 http://localhost:${server.port}${route.path}`);
+      });
+    }
+
     if (this.swaggerSetup) {
       console.log(`✨ 现代化 API 文档 (Scalar UI):`);
       console.log(`   📖 http://localhost:${server.port}/docs`);
       console.log(`📄 OpenAPI 规范:`);
       console.log(`   📄 http://localhost:${server.port}/docs-json`);
+    }
+
+    // 开发模式提示
+    if (this.options.development) {
+      console.log(
+        `🔥 开发模式已启用 ${
+          typeof this.options.development === "object"
+            ? JSON.stringify(this.options.development)
+            : ""
+        }`
+      );
+    }
+  }
+
+  /**
+   * 处理静态文件请求
+   */
+  private async handleStaticFile(pathname: string): Promise<Response> {
+    try {
+      const filePath = `.${pathname}`;
+      const file = (globalThis as any).Bun.file(filePath);
+
+      if (await file.exists()) {
+        return new Response(file);
+      } else {
+        return new Response("文件未找到", {
+          status: 404,
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
+      }
+    } catch (error) {
+      console.error("处理静态文件错误:", error);
+      return new Response("服务器内部错误", {
+        status: 500,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
     }
   }
 }
