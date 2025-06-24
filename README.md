@@ -102,12 +102,8 @@ bun-app/
 │   ├── assets/                 # 静态资源
 │   │   ├── favicon.ico         # 网站图标
 │   │   └── logo.svg            # 应用图标
-│   ├── components/             # 前端组件
-│   │   ├── app.ts              # 主页应用逻辑
-│   │   └── dashboard.ts        # 仪表板逻辑
 │   ├── pages/                  # HTML 页面
-│   │   ├── index.html          # 主页
-│   │   └── dashboard.html      # 仪表板页面
+│   │   └── index.html          # 主页
 │   ├── styles/                 # 样式文件
 │   │   └── styles.css          # 主样式文件
 │   └── README.md               # 前端目录说明
