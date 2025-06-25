@@ -2,8 +2,8 @@ import "reflect-metadata";
 import { ApplicationFactory } from "@/common";
 import { AppModule } from "./app.module";
 import { AuthGuard } from "./modules/user/guards/auth.guard";
-import { ValidationPipe } from "./common/pipes/validation.pipe";
-import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
+import { ValidationPipe } from "@/common/pipes/validation.pipe";
+import { ValidationExceptionFilter } from "@/common/filters/validation-exception.filter";
 
 // 导入 HTML 文件作为静态路由
 import indexHtml from "../frontend/pages/index.html";

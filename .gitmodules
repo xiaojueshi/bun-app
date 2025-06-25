@@ -1,0 +1,3 @@
+[submodule "src/common"]
+	path = src/common
+	url = /tmp/bun-framework-common.git
