@@ -1,3 +1,3 @@
 [submodule "src/common"]
 	path = src/common
-	url = /tmp/bun-framework-common.git
+	url = git@github.com:xiaojueshi/bun-common.git
